@@ -507,6 +507,7 @@ async function buildMD(mode,imgFiles){
   const inbox=allPhotos.filter(p=>p.sec===null);
   if(inbox.length){ md+='---\n\n## 附录 · 未归类照片\n\n'; for(let k=0;k<inbox.length;k++) md+=await emitPhoto(inbox[k],mode,imgFiles,'inbox_'+String(k+1).padStart(2,'0'),'未归类 照片'+(k+1)); }
   md+='---\n\n*由物流售前现场调研工具生成 · '+new Date().toLocaleString('zh-CN')+'*\n';
+  md=md.replace(/\n{3,}/g,'\n\n');
   return md;
 }
 function fileBase(){ const p=(state.proj||'现场调研').replace(/[\\\/:*?"<>|\s]/g,'').slice(0,30); const d=state.date||new Date().toISOString().slice(0,10); return p+'_调研报告_'+d; }

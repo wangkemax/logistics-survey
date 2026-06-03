@@ -1,4 +1,9 @@
 # 仓库快照 / 临时打包产物
 *.tar.gz
 tools/_pwa_tmp/
+tools/_report_check/
 _chk.js
+
+# 导出的调研报告（用户产出物，不入库）
+*_调研报告_*.zip
+*_调研报告_*.md
