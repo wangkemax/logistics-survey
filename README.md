@@ -21,12 +21,19 @@ logistics-survey/
 ├── docs/
 │   ├── 立项说明.md      # 立项稿，方向与范围
 │   └── v1.0-spec.md     # v1.0 开发规格与验收标准
+├── deploy/              # NAS / Docker 部署（nginx 静态服务，配 Lucky 等反代上 HTTPS）
+│   └── README.md        # 部署步骤（极空间 + Lucky 示例）
 └── tools/               # 调研工具 PWA
     ├── index.html       # 主程序（单文件，含全部逻辑）
     ├── manifest.webmanifest / sw.js / icon-*.png   # PWA 配套（可装、离线）
     ├── README.txt       # 部署与使用说明
     └── survey-pwa.zip   # 整套打包，便于一次性部署
 ```
+
+## 部署
+
+- **手机直接用**：浏览器打开 `tools/index.html`（或 `survey-pwa.zip` 解压后整目录放到任意 HTTPS 站点）。
+- **NAS / Docker**：见 [`deploy/README.md`](deploy/README.md) —— nginx 静态服务，前面用 Lucky 等反代成 HTTPS 域名，PWA 完整可用。
 
 ## 状态
 
