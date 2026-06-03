@@ -114,9 +114,9 @@
   .set-field{margin-bottom:15px;}
   .set-field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
   .set-field .sub{font-weight:400;color:var(--ink-2);font-size:12px;}
-  .test-row{display:flex;gap:9px;align-items:center;margin-top:4px;}
+  .test-row{display:flex;gap:9px;align-items:flex-start;margin-top:4px;}
   .test-row .btn{flex:none;padding:11px 16px;}
-  #testStatus{font-size:13px;font-weight:600;}
+  #testStatus{font-size:13px;font-weight:600;flex:1;min-width:0;word-break:break-word;line-height:1.45;}
   .sheet-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:12px;display:flex;gap:11px;}
   .sheet-card.inbox{border-color:var(--accent);background:var(--accent-soft);}
   .sheet-card img{width:96px;height:96px;object-fit:cover;border-radius:8px;flex:none;background:var(--paper-2);}
@@ -183,7 +183,7 @@
     <div class="modal-body">
       <div class="set-field"><label>API 地址 <span class="sub">· OpenAI 兼容，填到 /v1</span></label><input type="text" id="s_url" placeholder="https://your-endpoint/v1" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
       <div class="set-field"><label>API Key</label><input type="password" id="s_key" placeholder="sk-..." autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-      <div class="set-field"><label>模型名 <span class="sub">· 需支持图片输入（vision）</span></label><input type="text" id="s_model" placeholder="如 gpt-4o-mini / qwen-vl-max 等" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
+      <div class="set-field"><label>模型名 <span class="sub">· 需支持图片输入（vision）</span></label><input type="text" id="s_model" placeholder="需支持图片输入，如 MiniMax-M3 / gpt-4o / qwen-vl-max" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
       <div class="set-field"><label>AI 提示词 <span class="sub">· 描述照片时的关注维度</span></label><textarea id="s_prompt" rows="4"></textarea></div>
       <div class="set-field"><label>出发前自检</label><div class="test-row"><button class="btn btn-ghost" id="testBtn">&#128268; 测试连接</button><span id="testStatus" style="color:var(--ink-2)">未测试</span></div></div>
       <hr style="border:none;border-top:1px solid var(--line);margin:18px 0;">
@@ -432,7 +432,8 @@ document.getElementById('photosBtn').onclick=()=>openSheet(false);
 function aiCfg(){ return state.__settings||{}; }
 function aiReady(){ const s=aiCfg(); return !!(s.apiBaseUrl&&s.apiKey&&s.apiModel); }
 function chatUrl(){ return aiCfg().apiBaseUrl.replace(/\/+$/,'')+'/chat/completions'; }
-async function aiChat(messages,maxTokens){ const s=aiCfg(); const r=await fetch(chatUrl(),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey},body:JSON.stringify({model:s.apiModel,max_tokens:maxTokens||600,messages})}); if(!r.ok){ const t=await r.text().catch(()=>''); throw new Error('HTTP '+r.status+(t?(' · '+t.slice(0,140)):'')); } const d=await r.json(); return (d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||''; }
+function stripThink(s){ s=String(s||''); s=s.replace(/<think>[\s\S]*?<\/think>/gi,''); if(/<\/think>/i.test(s))s=s.replace(/^[\s\S]*?<\/think>/i,''); s=s.replace(/<\/?think>/gi,''); return s.trim(); }
+async function aiChat(messages,maxTokens){ const s=aiCfg(); const r=await fetch(chatUrl(),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey},body:JSON.stringify({model:s.apiModel,max_tokens:maxTokens||600,messages})}); if(!r.ok){ const t=await r.text().catch(()=>''); throw new Error('HTTP '+r.status+(t?(' · '+t.slice(0,400)):'')); } const d=await r.json(); const m=d.choices&&d.choices[0]&&d.choices[0].message; return stripThink((m&&m.content)||''); }
 async function runAI(p){
   if(!aiReady()){ toast('请先在设置里配置 AI'); document.getElementById('setModal').classList.add('show'); fillSettings(); return; }
   busy(true,'AI 识别中…');
@@ -459,7 +460,7 @@ async function genInsight(){
     state.__aiInsight=txt.trim(); save(); busy(false); toast('已生成综合洞察，已并入报告'); openPreview();
   }catch(e){ busy(false); toast('AI 失败：'+e.message); }
 }
-async function testConn(){ fillSettingsToState(); if(!aiReady()){ setTestStatus('请先填全地址/Key/模型','var(--warn)'); return; } setTestStatus('测试中…','var(--ink-2)'); try{ await aiChat([{role:'user',content:'回复两个字：正常'}],10); setTestStatus('✅ 连接正常','var(--ok)'); }catch(e){ setTestStatus('❌ '+e.message.slice(0,80),'var(--warn)'); } }
+async function testConn(){ fillSettingsToState(); if(!aiReady()){ setTestStatus('请先填全地址/Key/模型','var(--warn)'); return; } setTestStatus('测试中…','var(--ink-2)'); try{ await aiChat([{role:'user',content:'回复两个字：正常'}],10); setTestStatus('✅ 连接正常','var(--ok)'); }catch(e){ setTestStatus('❌ '+e.message.slice(0,300),'var(--warn)'); } }
 function setTestStatus(t,c){ const el=document.getElementById('testStatus'); el.textContent=t; el.style.color=c; }
 
 function fillSettings(){ const s=aiCfg(); document.getElementById('s_url').value=s.apiBaseUrl||''; document.getElementById('s_key').value=s.apiKey||''; document.getElementById('s_model').value=s.apiModel||''; document.getElementById('s_prompt').value=s.aiPrompt||DEFAULT_PROMPT; document.getElementById('s_keeporig').checked=s.keepOrig!==false; setTestStatus('未测试','var(--ink-2)'); showStorage(); }
