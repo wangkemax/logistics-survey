@@ -1,0 +1,4 @@
+# 仓库快照 / 临时打包产物
+*.tar.gz
+tools/_pwa_tmp/
+_chk.js

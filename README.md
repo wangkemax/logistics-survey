@@ -17,15 +17,21 @@
 ```
 logistics-survey/
 ├── README.md
+├── CLAUDE.md            # 项目上下文与定位边界（先读）
 ├── docs/
-│   └── 立项说明.md      # 立项稿，方向与范围
-└── tools/               # 调研工具 HTML（v1.0 待提交）
+│   ├── 立项说明.md      # 立项稿，方向与范围
+│   └── v1.0-spec.md     # v1.0 开发规格与验收标准
+└── tools/               # 调研工具 PWA
+    ├── index.html       # 主程序（单文件，含全部逻辑）
+    ├── manifest.webmanifest / sw.js / icon-*.png   # PWA 配套（可装、离线）
+    ├── README.txt       # 部署与使用说明
+    └── survey-pwa.zip   # 整套打包，便于一次性部署
 ```
 
 ## 状态
 
-- 🟡 立项中 — 见 `docs/立项说明.md`
-- ⚪ v1.0 工具 — 基于汽配仓储调研原型改造，待提交
+- ✅ 立项 — 见 `docs/立项说明.md`
+- ✅ v1.0 工具 — 基于现场调研原型改造收口为通用采集器，见 `docs/v1.0-spec.md`
 
 ---
 

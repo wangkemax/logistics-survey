@@ -1,0 +1,16 @@
+{
+  "name": "物流售前现场调研",
+  "short_name": "现场调研",
+  "description": "仓储项目现场调研采集工具：结构化字段 + 拍照与 AI 图注，支持 Markdown/ZIP 图文报告导出，数据本地保存、离线可用。",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f1e9",
+  "theme_color": "#1b1815",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
