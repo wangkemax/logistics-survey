@@ -32,7 +32,7 @@ docker compose up -d
 `docker compose restart`（或客户端直接刷新，nginx 对 index.html / sw.js 已设 no-cache）。
 
 > 极空间「Docker / 容器管理」里也可以：上传本项目 → 用 compose 文件创建项目；
-> 或在图形界面手动建一个 nginx:alpine 容器，映射端口 `8087:80`，
+> 或在图形界面手动建一个 nginx:alpine 容器，映射端口 `8327:80`，
 > 挂载 `tools → /usr/share/nginx/html`、`deploy/nginx.conf → /etc/nginx/conf.d/default.conf`。
 
 **方式 B · 自包含镜像（把工具打进镜像）**
@@ -40,14 +40,14 @@ docker compose up -d
 ```bash
 cd /vol1/docker/logistics-survey      # 注意在仓库根目录
 docker build -f deploy/Dockerfile -t logistics-survey .
-docker run -d --name logistics-survey --restart unless-stopped -p 8087:80 logistics-survey
+docker run -d --name logistics-survey --restart unless-stopped -p 8327:80 logistics-survey
 ```
 
 ## 三、本机自测
 
 ```bash
-curl -I http://<NAS局域网IP>:8087/index.html              # 200
-curl -I http://<NAS局域网IP>:8087/manifest.webmanifest    # Content-Type: application/manifest+json
+curl -I http://<NAS局域网IP>:8327/index.html              # 200
+curl -I http://<NAS局域网IP>:8327/manifest.webmanifest    # Content-Type: application/manifest+json
 ```
 
 ## 四、Lucky 反代
@@ -55,14 +55,14 @@ curl -I http://<NAS局域网IP>:8087/manifest.webmanifest    # Content-Type: app
 在 Lucky 里加一条 Web 服务/反向代理规则：
 
 - 域名/前缀：`survey.你的域名`（按你习惯）
-- 后端目标：`http://<NAS局域网IP>:8087`
+- 后端目标：`http://<NAS局域网IP>:8327`
 - 证书：用你 Lucky 已配置的那张（Let's Encrypt / DDNS 证书）
 
 保存后，手机浏览器打开 `https://survey.你的域名` → 菜单「添加到主屏幕」，即得离线可用的 App 图标。
 
 ## 五、注意
 
-- 端口 `8087` 可自改，改 `docker-compose.yml` 的 `ports` 与 Lucky 后端目标即可。
+- 端口 `8327` 可自改，改 `docker-compose.yml` 的 `ports` 与 Lucky 后端目标即可。
 - `tools/` 是只读挂载，容器内不会改你的文件。
 - AI 图注仍走你在工具「设置」里填的 MiniMax 接口（key 只存手机本地浏览器，不经此容器）。
 - 数据存在手机浏览器本地（localStorage / IndexedDB），不在 NAS。务必现场调研后用工具内「备份」导出归档。

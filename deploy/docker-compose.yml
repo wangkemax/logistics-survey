@@ -8,7 +8,7 @@ services:
     container_name: logistics-survey
     restart: unless-stopped
     ports:
-      - "8087:80"        # 宿主端口:容器端口；Lucky 反代指向 http://<NAS局域网IP>:8087
+      - "8327:80"        # 宿主端口:容器端口；Lucky 反代指向 http://<NAS局域网IP>:8327
     volumes:
       - ../tools:/usr/share/nginx/html:ro              # 工具文件（只读挂载，改了无需重建镜像）
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro # 站点配置
